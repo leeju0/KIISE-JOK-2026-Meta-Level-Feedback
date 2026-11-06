@@ -9,7 +9,6 @@
 
 **[Paper · KCI](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239)**
 
-Author-provided Python implementation of the paper's iterative reasoning framework with meta-level feedback.
 
 ## Abstract
 
