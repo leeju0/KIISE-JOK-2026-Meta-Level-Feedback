@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this implementation, please cite the paper below."
+title: "Iterative Reasoning Framework for Large Language Models via Meta-Level Feedback"
+type: software
+authors:
+  - family-names: "Lee"
+    given-names: "Juyoung"
+  - family-names: "Ahn"
+    given-names: "Jaegyoon"
+preferred-citation:
+  type: article
+  title: "Iterative Reasoning Framework for Large Language Models via Meta-Level Feedback"
+  authors:
+    - family-names: "Lee"
+      given-names: "Juyoung"
+    - family-names: "Ahn"
+      given-names: "Jaegyoon"
+  journal: "Journal of KIISE"
+  year: 2026
+  volume: "53"
+  issue: "10"
+  start: "1032"
+  end: "1040"
+  issn: "2383-630X"
+  url: "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239"
