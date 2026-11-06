@@ -1,38 +1,173 @@
-# Iterative Reasoning Framework for Large Language Models via Meta-Level Feedback
+<h1 align="center">
+  Iterative Reasoning Framework for Large Language Models<br>
+  via Meta-Level Feedback
+</h1>
 
-**메타 수준 피드백을 활용한 대형 언어 모델의 단계적 추론 프레임워크**
+<p align="center">
+  <strong>메타 수준 피드백을 활용한 대형 언어 모델의 단계적 추론 프레임워크</strong>
+</p>
 
-**이주영 · 안재균** · 인천대학교  
-*Journal of KIISE (정보과학회논문지), 53(10), 1032–1040, 2026*
+<p align="center">
+  <strong>Juyoung Lee · Jaegyoon Ahn</strong><br>
+  Incheon National University
+</p>
 
-[![KCI 우수등재학술지](https://img.shields.io/badge/KCI-%EC%9A%B0%EC%88%98%EB%93%B1%EC%9E%AC%ED%95%99%EC%88%A0%EC%A7%80-gold)](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239)
+<p align="center">
+  <em>Journal of KIISE (정보과학회논문지), 53(10), 1032–1040, 2026</em>
+</p>
 
-**[Paper · KCI](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239)**
+<p align="center">
+  <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239">
+    <img alt="KCI 우수등재학술지" src="https://img.shields.io/badge/KCI-%EC%9A%B0%EC%88%98%EB%93%B1%EC%9E%AC%ED%95%99%EC%88%A0%EC%A7%80-D4A017?style=flat-square">
+  </a>
+  <img alt="Journal of KIISE · 2026" src="https://img.shields.io/badge/Journal%20of%20KIISE-2026-2563EB?style=flat-square">
+  <img alt="Python 3.9+" src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white">
+  <img alt="GGUF inference" src="https://img.shields.io/badge/Inference-GGUF-6C5CE7?style=flat-square">
+  <img alt="SQLite logging" src="https://img.shields.io/badge/Logging-SQLite-008C9E?style=flat-square&amp;logo=sqlite&amp;logoColor=white">
+</p>
 
+<p align="center">
+  <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239"><strong>📄 Read Paper (KCI)</strong></a>
+  &nbsp;·&nbsp;
+  <a href="#framework"><strong>🧠 Framework</strong></a>
+  &nbsp;·&nbsp;
+  <a href="#quick-start"><strong>🚀 Quick Start</strong></a>
+  &nbsp;·&nbsp;
+  <a href="#citation"><strong>📚 Citation</strong></a>
+</p>
+
+---
+
+## Overview
+
+This repository provides a standalone Python implementation of the **iterative reasoning framework with meta-level feedback** described in our paper. A **single LLM** operates in two logical sessions: the **meta session (M)** controls the reasoning process, and the **execution session (C)** carries out each reasoning step.
+
+**Key characteristics**
+
+- **Meta-level control:** Plans the next sub-goal based on the current reasoning state.
+- **Iterative execution:** Alternates planning, reasoning, summarization, and continuation decisions.
+- **Inspectable traces:** Records intermediate reasoning, summaries, decisions, and links in SQLite.
+- **Standalone inference:** Supports an instruction-tuned GGUF model through the original runtime.
 
 ## Abstract
 
-Large Language Models (LLMs) have demonstrated strong performance on complex reasoning tasks, and various methods have been proposed to further improve their reasoning ability. Chain-of-Thought (CoT) has the limitation of error propagation along a single reasoning path, while self-consistency alleviates this issue but requires high computational cost. In addition, although recent commercial LLMs such as GPT-4o and GPT-5 exhibit enhanced reasoning performance, their reasoning processes are still carried out largely internally, making them difficult to observe and interpret. To address these limitations, this study proposes a iterative reasoning framework that separates a single LLM into a meta session and an execution session. The meta session monitors the current reasoning state and determines the goal and direction of the next step, while the execution session performs the actual reasoning accordingly. Through this design, the proposed framework improves the stability, controllability, and explainability of reasoning, and demonstrates superior performance over existing methods in multi-hop and causal reasoning tasks.
+Large Language Models (LLMs) have demonstrated strong performance on complex reasoning tasks, and various methods have been proposed to further improve their reasoning ability. Chain-of-Thought (CoT) has the limitation of error propagation along a single reasoning path, while self-consistency alleviates this issue but requires high computational cost. In addition, although recent commercial LLMs such as GPT-4o and GPT-5 exhibit enhanced reasoning performance, their reasoning processes are still carried out largely internally, making them difficult to observe and interpret. To address these limitations, this study proposes **an iterative reasoning framework** that separates a single LLM into a meta session and an execution session. The meta session monitors the current reasoning state and determines the goal and direction of the next step, while the execution session performs the actual reasoning accordingly. Through this design, the proposed framework improves the stability, controllability, and explainability of reasoning, and demonstrates superior performance over existing methods in multi-hop and causal reasoning tasks.
 
 ## Framework
 
-![Overall framework of the proposed method](assets/figures/framework.png)
+<p align="center">
+  <img src="assets/figures/framework.png" alt="Overall architecture of the proposed meta-level feedback framework" width="850">
+</p>
 
-*Figure 1. Overall framework of the proposed method.*
+<p align="center"><em>Figure 1. Overall framework of the proposed method.</em></p>
 
-A single LLM serves as both the meta session (M) and execution session (C). The meta session plans the next sub-goal, summarizes the current state, and decides whether to continue. The execution session performs the corresponding reasoning. The resulting trace makes the planning, intermediate results, and termination decisions available for inspection.
+The same LLM takes on two complementary roles:
+
+| Session | Responsibility |
+| :--- | :--- |
+| **Meta session (M)** | Examines the current state, plans the next sub-goal, updates the summary, and decides whether to continue. |
+| **Execution session (C)** | Performs the reasoning task specified by the meta session. |
+
+The framework follows a **plan → reason → summarize → decide** loop. Its reasoning trace exposes intermediate outputs, state summaries, and termination decisions for inspection.
 
 ## Reasoning Example
 
-![Iterative reasoning example from the paper](assets/figures/reasoning-example.png)
+<p align="center">
+  <img src="assets/figures/reasoning-example.png" alt="Iterative reasoning trace on a MathQA example" width="850">
+</p>
 
-*Figure 2. Iterative reasoning example of the proposed framework on a MathQA problem.*
+<p align="center"><em>Figure 2. Iterative reasoning example of the proposed framework on a MathQA problem.</em></p>
 
-Both figures are extracted from the authors' manuscript. Publication details and the published article are available through the KCI link above.
+Both figures are extracted from the authors' manuscript. Publication details are available on the [KCI article page](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239).
+
+## Quick Start
+
+**Requirements:** Python 3.9 or later and an instruction-tuned GGUF model compatible with the original `chatml` runtime format.
+
+### 1. Install
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # macOS / Linux
+pip install -r requirements.txt
+```
+
+On Windows, activate the environment with `.venv\Scripts\activate` (Command Prompt) or `.venv\Scripts\Activate.ps1` (PowerShell).
+
+### 2. Run a question
+
+```bash
+python run.py \
+  --model /path/to/model.gguf \
+  --question "Alice has 3 apples and buys 2 more. How many apples does she have?" \
+  --output outputs/example.json
+```
+
+The CLI prints the final answer. Reasoning traces are recorded in `outputs/reasoning.db`; `--output` additionally exports the run as JSON.
+
+### 3. Optional CUDA acceleration
+
+```bash
+CMAKE_ARGS="-DGGML_CUDA=on" pip install --upgrade --force-reinstall -r requirements.txt
+```
+
+Use `--n-gpu-layers 0` for CPU inference or `--gpu 0` to select a CUDA device. Consult the [llama-cpp-python installation guide](https://llama-cpp-python.readthedocs.io/en/latest/) for platform-specific setup.
+
+### Default settings
+
+| Option | Default |
+| :--- | :--- |
+| `--max-steps` | `3` |
+| `--max-tokens` | `2048` |
+| `--temperature` | `0.1` |
+| `--top-p` | `0.95` |
+| `--top-k` | `40` |
+| `--repeat-penalty` | `1.1` |
+| `--n-ctx` | `15000` |
+
+Use `--max-steps 4` for a four-step limit. These values follow the supplied source-code defaults and **do not imply that every published experiment used identical settings**. Set `--db` to change the SQLite log path and `--answer-format` to pass an optional answer constraint. Run `python run.py --help` for all options.
+
+## Repository Structure
+
+| File | Purpose |
+| :--- | :--- |
+| `meta_feedback/orchestrator.py` | M/C iterative reasoning loop and step events |
+| `meta_feedback/prompts.py` | System/task prompts and final-answer extraction |
+| `meta_feedback/llm_runtime.py` | Shared GGUF runtime and response parsing |
+| `meta_feedback/sqlite_store.py` | Reasoning-chain nodes, links, and session logs |
+| `meta_feedback/schemas.py` | Structured responses and trace schemas |
+| `meta_feedback/config.py` | Portable model settings |
+| `run.py` | Single-question command-line interface |
+
+<details>
+<summary><strong>🔧 Implementation details and release adjustments</strong></summary>
+
+<br>
+
+This release is extracted from the authors' original `dual_thinking_machine` source. It preserves the M/C system prompts, planning and reasoning prompts, state summaries, continuation decision logic, final-answer extractor, and JSON parsing fallbacks.
+
+The original experimental path is used with role-specific KV persistence disabled. The `chatml` message format and raw-text fallbacks are retained. Full traces are logged separately; subsequent planning uses the previous reasoning output and the updated summary.
+
+For standalone use, package imports, model paths, and CLI entry points were adapted. Integration fixes address the initial chain link, previous-summary logging, completed-step count, final link at the iteration limit, answer-format propagation on forced termination, and explicit zero-temperature overrides. CUDA device selection now precedes the native backend import.
+
+The underlying **plan → reason → summarize → decide** sequence and prompt text are preserved.
+
+</details>
+
+## Tests and Reproducibility
+
+The included tests exercise the original runtime, parsing, orchestration, CLI, and SQLite storage with scripted model outputs. Control-flow tests can run **without a model or GPU**:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+> [!NOTE]
+> Native GGUF inference and the published benchmark scores have **not** been revalidated in this standalone release.
 
 ## Citation
 
-Bibliographic metadata follows the [KCI record](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239).
+If you find this work useful, please cite the [published paper](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239):
 
 ```bibtex
 @article{ART003394239,
@@ -48,60 +183,6 @@ Bibliographic metadata follows the [KCI record](https://www.kci.go.kr/kciportal/
 }
 ```
 
-<details>
-<summary><strong>Code and usage</strong></summary>
-
-This release is extracted from the authors' original `dual_thinking_machine` source. It retains the original M/C system prompts, planning and reasoning prompts, state summaries, decision logic, final-answer extractor, and JSON parsing fallbacks. The core method is packaged for standalone Python use, with SQLite records of the reasoning chain.
-
-| File | Purpose |
-| --- | --- |
-| `meta_feedback/orchestrator.py` | Original M/C reasoning loop and step events |
-| `meta_feedback/prompts.py` | Original system and task prompts, including final-answer extraction |
-| `meta_feedback/llm_runtime.py` | Original shared GGUF runtime and response parsing |
-| `meta_feedback/sqlite_store.py` | Reasoning-chain nodes, links, and session logs |
-| `meta_feedback/schemas.py` | Structured responses and trace schemas |
-| `meta_feedback/config.py` | Portable model settings |
-| `run.py` | Single-question command-line entry point |
-
-The release uses the original experiment path with role-specific KV persistence disabled. The original `chatml` message format and raw-text fallbacks are preserved. Full traces are stored separately; subsequent planning uses the previous reasoning output and the updated summary.
-
-### Quick Start
-
-Use Python 3.9 or later and an instruction-tuned GGUF model compatible with the source runtime's `chatml` format.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-python run.py \
-  --model /path/to/model.gguf \
-  --question "Alice has 3 apples and buys 2 more. How many apples does she have?" \
-  --output outputs/example.json
-```
-
-For an NVIDIA CUDA build, install the backend using:
-
-```bash
-CMAKE_ARGS="-DGGML_CUDA=on" pip install --upgrade --force-reinstall -r requirements.txt
-```
-
-Use `--n-gpu-layers 0` for CPU inference or `--gpu 0` to select a CUDA device. See the [llama-cpp-python installation documentation](https://llama-cpp-python.readthedocs.io/en/latest/) for platform-specific setup.
-
-Defaults follow the supplied source settings: `--max-steps 3`, `--max-tokens 2048`, `--temperature 0.1`, `--top-p 0.95`, `--top-k 40`, `--repeat-penalty 1.1`, and `--n-ctx 15000`. Use `--max-steps 4` for a four-step limit. These are source-code defaults, not a claim that all published experiments used the same settings.
-
-The command prints the final answer. SQLite logs are saved to `outputs/reasoning.db` (`--db` to change the path); `--output` additionally exports the run as JSON. `--answer-format` passes an optional answer constraint to the original extractor. Run `python run.py --help` for all options.
-
-### Release Adjustments
-
-Package imports, model paths, and the command-line entry point were adapted for standalone use. Integration fixes correct the initial chain link, previous-summary logging, the completed-step count and final link at the iteration limit, propagation of the answer format at forced termination, and explicit zero-temperature overrides. CUDA device selection now precedes the native backend import. Prompt text and the core plan → reason → summarize → decide sequence are preserved.
-
-The tests exercise the original runtime, parsing, orchestration, CLI, and SQLite storage with scripted model outputs. Native GGUF inference and the published benchmark scores have not been revalidated in this release.
-
-The control-flow tests run without a model or GPU:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-</details>
+<p align="center">
+  <sub>Published in <strong>Journal of KIISE</strong> · 2026 · <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003394239">KCI Article</a></sub>
+</p>
