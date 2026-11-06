@@ -1,6 +1,5 @@
 <h1 align="center">
-  Iterative Reasoning Framework for Large Language Models<br>
-  via Meta-Level Feedback
+  Iterative Reasoning Framework for Large Language Models via Meta-Level Feedback
 </h1>
 
 <p align="center">
