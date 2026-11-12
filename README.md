@@ -20,9 +20,6 @@
     <img alt="KCI 우수등재학술지" src="https://img.shields.io/badge/KCI-%EC%9A%B0%EC%88%98%EB%93%B1%EC%9E%AC%ED%95%99%EC%88%A0%EC%A7%80-D4A017?style=flat-square">
   </a>
   <img alt="Journal of KIISE · 2026" src="https://img.shields.io/badge/Journal%20of%20KIISE-2026-2563EB?style=flat-square">
-  <img alt="Python 3.9+" src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white">
-  <img alt="GGUF inference" src="https://img.shields.io/badge/Inference-GGUF-6C5CE7?style=flat-square">
-  <img alt="SQLite logging" src="https://img.shields.io/badge/Logging-SQLite-008C9E?style=flat-square&amp;logo=sqlite&amp;logoColor=white">
 </p>
 
 <p align="center">
